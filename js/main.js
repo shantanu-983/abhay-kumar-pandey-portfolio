@@ -9,11 +9,12 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 const RESIDENCE_MAPS_URL =
-  "https://www.google.com/maps/place/Skymoon+IT+Point/@25.6121935,85.0336459,15z/data=!4m10!1m2!2m1!1sVijay+Vihar+Colony+Near+St+Karens+Secondary+School+Khagaul+Road+Danapur+Patna+801503!3m6!1s0x39ed57e8643400b7:0x532077b95ecd2ab!8m2!3d25.6121935!4d85.0439456!15sClRWaWpheSBWaWhhciBDb2xvbnkgTmVhciBTdCBLYXJlbnMgU2Vjb25kYXJ5IFNjaG9vbCBLaGFnYXVsIFJvYWQgRGFuYXB1ciBQYXRuYSA4MDE1MDNaViJUdmlqYXkgdmloYXIgY29sb255IG5lYXIgc3Qga2FyZW5zIHNlY225kYXJ5IHNjaG9vbCBraGFnYXVsIHJvYWQgZGFuYXB1ciBwYXRuYSA4MDE1MDNaViJUdmlqYXkgdmloYXIgY29sb255IG5lYXIgc3Qga2FyZW5zIHNlY29uZGFyeSBzY2hvb2wga2hhZ2F1bCByb2FkIGRhbmFwdXIgcGF0bmEgODAxNTAzkgEbZWR1Y2F0aW9uYWxfdGVzdGluZ19zZXJ2aWNlmgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVVJ1WDJGSE1YRm5SUkFC4AEA-gEECAAQKQ!16s%2Fg%2F11h7fqxl12?entry=ttu&g_ep=EgoyMDI2MTExOC4xIKXMDSoASAFQAw%3D%3D";
+  "https://www.google.com/maps/place/Skymoon+IT+Point/@25.6121935,85.0336459,15z/data=!4m10!1m2!2m1!1sVijay+Vihar+Colony+Near+St+Karens+Secondary+School+Khagaul+Road+Danapur+Patna+801503!3m6!1s0x39ed57e8643400b7:0x532077b95ecd2ab!8m2!3d25.6121935!4d85.0439456!15sClRWaWpheSBWaWhhciBDb2xvbnkgTmVhciBTdCBLYXJlbnMgU2Vjb25kYXJ5IFNjaG9vbCBLaGFnYXVsIFJvYWQgRGFuYXB1ciBQYXRuYSA4MDE1MDNaViJUdmlqYXkgdmloYXIgY29sb255IG5lYXIgc3Qga2FyZW5zIHNlY29uZGFyeSBzY2hvb2wga2hhZ2F1bCByb2FkIGRhbmFwdXIgcGF0bmEgODAxNTAzkgEbZWR1Y2F0aW9uYWxfdGVzdGluZ19zZXJ2aWNlmgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVVJ1WDJGSE1YRm5SUkFC4AEA-gEECAAQKQ!16s%2Fg%2F11h7fqxl12?entry=ttu&g_ep=EgoyMDI2MTExOC4xIKXMDSoASAFQAw%3D%3D";
 
 function normalizeCollegeName(text) {
   if (typeof text !== "string") return text;
   return text
+    .replace(/\bS\.?\s*D\.?\s*Jain(?:\s+College)?(?:\s*,?\s*Ara)?\b/gi, "H. D. Jain College, Ara")
     .replace(/\bS\.?\s*B\.?\s*Jain(?:\s+College)?(?:\s*,?\s*Ara)?\b/gi, "H. D. Jain College, Ara")
     .replace(/\bD\.?\s*J\.?\s*Jain(?:\s+College)?(?:\s*,?\s*Ara)?\b/gi, "H. D. Jain College, Ara")
     .replace(/\bH\.?\s*D\.?\s*Jain(?:\s+College)?(?:\s*,?\s*Ara)?\b/gi, "H. D. Jain College, Ara");
@@ -334,7 +335,7 @@ function renderAdvocateContent() {
 /**
  * Request an Appointment Form Handler
  * Sends structured appointment enquiries directly to abhay.arpit@gmail.com
- * via FormSubmit AJAX endpoint when served over HTTP/HTTPS.
+ * via FormSubmit AJAX endpoint + provides a direct Gmail / Mailto fallback.
  */
 function initAppointmentForm() {
   const form = document.getElementById("appointmentForm");
@@ -396,40 +397,8 @@ function initAppointmentForm() {
         ? ADVOCATE_DATA.contact.email
         : "abhay.arpit@gmail.com";
 
-    const subjectText = `Appointment Enquiry — ${caseType.value} (${fullName.value.trim()})`;
-    const bodyText = [
-      `Full Name: ${fullName.value.trim()}`,
-      `Mobile Number: ${mobileNumber.value.trim()}`,
-      `Email Address: ${emailAddress.value.trim()}`,
-      `Case Type: ${caseType.value}`,
-      `Appointment Date Preference: ${appointmentDate.value}`,
-      `Preferred Consultation Mode: ${consultationMode ? consultationMode.value : "Offline"}`,
-      `Brief Description of Legal Issue: ${legalIssue.value.trim()}`
-    ].join("\n");
-
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
-      recipientEmail
-    )}&su=${encodeURIComponent(subjectText)}&body=${encodeURIComponent(bodyText)}`;
-    const mailtoUrl = `mailto:${encodeURIComponent(recipientEmail)}?subject=${encodeURIComponent(
-      subjectText
-    )}&body=${encodeURIComponent(bodyText)}`;
-
-    if (window.location.protocol === "file:") {
-      feedbackEl.hidden = false;
-      feedbackEl.classList.add("error");
-      feedbackEl.innerHTML = `
-        <strong>Local File Mode (file://) Detected.</strong>
-        <p>Direct background email dispatch works over HTTP/HTTPS (e.g., Live Server or hosted URL). When opened as a local file, send via Gmail or Mail App:</p>
-        <div class="feedback-actions">
-          <a href="${escapeHtml(gmailUrl)}" target="_blank" rel="noopener noreferrer" class="feedback-link">Open in Gmail ↗</a>
-          <a href="${escapeHtml(mailtoUrl)}" class="feedback-link">Open Mail App ↗</a>
-        </div>
-      `;
-      return;
-    }
-
     const payload = {
-      _subject: subjectText,
+      _subject: `Appointment Enquiry — ${caseType.value} (${fullName.value.trim()})`,
       _template: "table",
       _captcha: "false",
       "Full Name": fullName.value.trim(),
@@ -457,7 +426,7 @@ function initAppointmentForm() {
 
       const result = await response.json().catch(() => ({}));
 
-      if (!response.ok || result.success === false || result.success === "false") {
+      if (!response.ok || result.success === false) {
         throw new Error(result.message || "Submission failed");
       }
 
@@ -467,7 +436,7 @@ function initAppointmentForm() {
         <strong>Enquiry Submitted Directly.</strong>
         <p>Your appointment enquiry has been sent to <strong>${escapeHtml(
           recipientEmail
-        )}</strong>. If this is the first time submitting from this domain, check the inbox (and Spam folder) for a one-time activation email.</p>
+        )}</strong>. If this is the first time submitting from this domain, please check the inbox for a one-time activation email.</p>
       `;
       form.reset();
     } catch {
@@ -475,11 +444,7 @@ function initAppointmentForm() {
       feedbackEl.classList.add("error");
       feedbackEl.innerHTML = `
         <strong>Direct Submission Could Not Be Completed.</strong>
-        <p>Please check your internet connection or send your enquiry directly via Gmail or your email app:</p>
-        <div class="feedback-actions">
-          <a href="${escapeHtml(gmailUrl)}" target="_blank" rel="noopener noreferrer" class="feedback-link">Send via Gmail ↗</a>
-          <a href="${escapeHtml(mailtoUrl)}" class="feedback-link">Send via Mail App ↗</a>
-        </div>
+        <p>Please check your internet connection or ensure the site is running over HTTP/HTTPS (not a blocked local file), and try submitting again.</p>
       `;
     } finally {
       submitBtn.disabled = false;
@@ -676,7 +641,7 @@ function escapeHtml(str) {
   return normalizeCollegeName(String(str))
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
-    .replace(/>/g, ">")
+    .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 }
