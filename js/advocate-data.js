@@ -9,7 +9,7 @@ const ADVOCATE_DATA = {
     bannerText:
       "DEVELOPMENT PREVIEW — Pending Bar Council of India Rule 36 verification and advocate approval prior to public deployment.",
     verificationChecklist: [
-      "Confirm exact postgraduate degree title (Chemistry — S.D. Jain College, Ara) before publishing formal degree letters.",
+      "Confirm exact postgraduate degree title (Chemistry — H.D. Jain College, Ara) before publishing formal degree letters.",
       "Confirm exact full expansion of 'BLT' and formal tribunal names prior to public deployment.",
       "Confirm exact wording for practice before the Supreme Court of India.",
       "Verify Google Maps destination link for Lawyers' Association, Room No. 2, Patna High Court.",
@@ -50,7 +50,7 @@ const ADVOCATE_DATA = {
       {
         level: "Postgraduate Qualification",
         qualification: "Chemistry",
-        institution: "S.D. Jain College, Ara",
+        institution: "H.D. Jain College, Ara",
         verificationNote: "Exact degree title pending confirmation prior to public release."
       }
     ]
