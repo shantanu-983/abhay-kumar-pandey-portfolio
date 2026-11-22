@@ -9,7 +9,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 const RESIDENCE_MAPS_URL =
-  "https://www.google.com/maps/place/Skymoon+IT+Point/@25.6121935,85.0336459,15z/data=!4m10!1m2!2m1!1sVijay+Vihar+Colony+Near+St+Karens+Secondary+School+Khagaul+Road+Danapur+Patna+801503!3m6!1s0x39ed57e8643400b7:0x532077b95ecd2ab!8m2!3d25.6121935!4d85.0439456!15sClRWaWpheSBWaWhhciBDb2xvbnkgTmVhciBTdCBLYXJlbnMgU2Vjb25kYXJ5IFNjaG9vbCBLaGFnYXVsIFJvYWQgRGFuYXB1ciBQYXRuYSA4MDE1MDNaViJUdmlqYXkgdmloYXIgY29sb255IG5lYXIgc3Qga2FyZW5zIHNlY29uZGFyeSBzY2hvb2wga2hhZ2F1bCByb2FkIGRhbmFwdXIgcGF0bmEgODAxNTAzkgEbZWR1Y2F0aW9uYWxfdGVzdGluZ19zZXJ2aWNlmgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVVJ1WDJGSE1YRm5SUkFC4AEA-gEECAAQKQ!16s%2Fg%2F11h7fqxl12?entry=ttu&g_ep=EgoyMDI2MTExOC4xIKXMDSoASAFQAw%3D%3D";
+  "https://www.google.com/maps/place/Skymoon+IT+Point/@25.6121935,85.0336459,15z/data=!4m10!1m2!2m1!1sVijay+Vihar+Colony+Near+St+Karens+Secondary+School+Khagaul+Road+Danapur+Patna+801503!3m6!1s0x39ed57e8643400b7:0x532077b95ecd2ab!8m2!3d25.6121935!4d85.0439456!15sClRWaWpheSBWaWhhciBDb2xvbnkgTmVhciBTdCBLYXJlbnMgU2Vjb25kYXJ5IFNjaG9vbCBLaGFnYXVsIFJvYWQgRGFuYXB1ciBQYXRuYSA4MDE1MDNaViJUdmlqYXkgdmloYXIgY29sb255IG5lYXIgc3Qga2FyZW5zIHNlY225kYXJ5IHNjaG9vbCBraGFnYXVsIHJvYWQgZGFuYXB1ciBwYXRuYSA4MDE1MDNaViJUdmlqYXkgdmloYXIgY29sb255IG5lYXIgc3Qga2FyZW5zIHNlY29uZGFyeSBzY2hvb2wga2hhZ2F1bCByb2FkIGRhbmFwdXIgcGF0bmEgODAxNTAzkgEbZWR1Y2F0aW9uYWxfdGVzdGluZ19zZXJ2aWNlmgEkQ2hkRFNVaE5NRzluUzBWSlEwRm5TVVJ1WDJGSE1YRm5SUkFC4AEA-gEECAAQKQ!16s%2Fg%2F11h7fqxl12?entry=ttu&g_ep=EgoyMDI2MTExOC4xIKXMDSoASAFQAw%3D%3D";
+
+function normalizeCollegeName(text) {
+  if (typeof text !== "string") return text;
+  return text
+    .replace(/\bS\.?\s*B\.?\s*Jain(?:\s+College)?(?:\s*,?\s*Ara)?\b/gi, "H. D. Jain College, Ara")
+    .replace(/\bD\.?\s*J\.?\s*Jain(?:\s+College)?(?:\s*,?\s*Ara)?\b/gi, "H. D. Jain College, Ara")
+    .replace(/\bH\.?\s*D\.?\s*Jain(?:\s+College)?(?:\s*,?\s*Ara)?\b/gi, "H. D. Jain College, Ara");
+}
 
 /**
  * Cycle between 3 color themes (Chamber, Parchment, Slate)
@@ -326,7 +334,7 @@ function renderAdvocateContent() {
 /**
  * Request an Appointment Form Handler
  * Sends structured appointment enquiries directly to abhay.arpit@gmail.com
- * via FormSubmit AJAX endpoint + provides a direct Gmail / Mailto fallback.
+ * via FormSubmit AJAX endpoint when served over HTTP/HTTPS.
  */
 function initAppointmentForm() {
   const form = document.getElementById("appointmentForm");
@@ -336,7 +344,6 @@ function initAppointmentForm() {
 
   if (!form || !submitBtn || !feedbackEl) return;
 
-  // Prevent selecting past dates
   if (dateInput) {
     const today = new Date().toISOString().split("T")[0];
     dateInput.setAttribute("min", today);
@@ -412,7 +419,7 @@ function initAppointmentForm() {
       feedbackEl.classList.add("error");
       feedbackEl.innerHTML = `
         <strong>Local File Mode (file://) Detected.</strong>
-        <p>Direct background email dispatch requires a local/live server. You can send this enquiry directly via Gmail or your email app:</p>
+        <p>Direct background email dispatch works over HTTP/HTTPS (e.g., Live Server or hosted URL). When opened as a local file, send via Gmail or Mail App:</p>
         <div class="feedback-actions">
           <a href="${escapeHtml(gmailUrl)}" target="_blank" rel="noopener noreferrer" class="feedback-link">Open in Gmail ↗</a>
           <a href="${escapeHtml(mailtoUrl)}" class="feedback-link">Open Mail App ↗</a>
@@ -460,7 +467,7 @@ function initAppointmentForm() {
         <strong>Enquiry Submitted Directly.</strong>
         <p>Your appointment enquiry has been sent to <strong>${escapeHtml(
           recipientEmail
-        )}</strong>. If this is the first time submitting from this domain, please check the inbox (and Spam folder) for a one-time activation email.</p>
+        )}</strong>. If this is the first time submitting from this domain, check the inbox (and Spam folder) for a one-time activation email.</p>
       `;
       form.reset();
     } catch {
@@ -662,11 +669,11 @@ function processStudioPortraits() {
 
 function setText(id, value) {
   const el = document.getElementById(id);
-  if (el) el.textContent = value;
+  if (el) el.textContent = normalizeCollegeName(value);
 }
 
 function escapeHtml(str) {
-  return String(str)
+  return normalizeCollegeName(String(str))
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, ">")
