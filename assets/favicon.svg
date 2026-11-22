@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" fill="#080E13"/>
+  <rect x="4" y="4" width="56" height="56" stroke="#A88762" stroke-width="1.5"/>
+  <text x="32" y="39" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="600" fill="#F5F0E7" letter-spacing="2">AKP</text>
+</svg>
