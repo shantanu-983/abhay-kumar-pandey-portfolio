@@ -69,4 +69,57 @@ cd abhay-kumar-pandey-portfolio
 
 ### 3. Run the Website
 
-Open
+Open `index.html` in your browser.
+
+For local development, you can also use the Live Server extension in Visual Studio Code.
+
+## Customization
+
+The website uses a simple and maintainable file structure:
+
+- `index.html` — Website structure and sections.
+- `css/style.css` — Visual design, themes, and responsive styling.
+- `js/advocate-data.js` — Centralized advocate information.
+- `js/main.js` — Website functionality and interactions.
+- `assets/` — Website images and visual assets.
+
+## Deployment
+
+The website can be hosted for free using GitHub Pages.
+
+1. Push the project to your GitHub repository.
+2. Open repository **Settings**.
+3. Navigate to **Pages**.
+4. Select **Deploy from a branch**.
+5. Choose the `main` branch and `/ (root)` folder.
+6. Click **Save**.
+
+GitHub Pages will generate a public website URL after deployment.
+
+## Developer
+
+**Shantanu Pandey**
+
+- Role: Project Creator & Frontend Developer
+- Interests: Web Development, Artificial Intelligence, and Software Engineering.
+- GitHub: [shantanu-983](https://github.com/shantanu-983)
+
+This project represents my practical experience in building responsive and structured websites using core frontend technologies.
+
+## Project Credits
+
+**Professional Profile:** Abhay Kumar Pandey, Advocate, Patna High Court.
+
+**Design & Development:** Shantanu Pandey.
+
+## Important Notice
+
+This website presents professional information and does not provide legal advice or guarantee any legal outcome.
+
+Public deployment should be subject to the advocate's approval and verification of applicable Bar Council of India professional-conduct requirements.
+
+## License & Usage
+
+All rights to the advocate's personal information, photographs, and professional content remain with their respective owners.
+
+The source code is shared for portfolio and educational purposes. Reuse of personal information, photographs, or branding requires appropriate permission.
